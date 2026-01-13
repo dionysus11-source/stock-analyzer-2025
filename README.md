@@ -12,6 +12,9 @@ Magic Split 매매내역을 분석하여 평가손익을 계산하는 도구입�
 
 ### 2단계: 프로그램 실행
 1. 이 GitHub 저장소에서 ZIP 파일을 다운로드합니다.
+<img width="686" height="332" alt="download_zip" src="https://github.com/user-attachments/assets/2e351576-a5a9-4364-8e4f-86517cda53b7" />
+
+
 2. **`run_python.bat`** 파일을 더블클릭하여 실행
    - Python과 필요한 라이브러리가 자동으로 설치됩니다
    - 설치 후 프로그램이 자동으로 시작됩니다
