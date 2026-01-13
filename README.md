@@ -1,52 +1,69 @@
-========================================
-    주식 평가손익 분석기 v2.0
-========================================
+# 주식 평가손익 분석기
 
-📁 파일 구성:
-├── main.exe              # 실행파일 (빠른 실행)
-├── main.py               # Python 소스코드
+Magic Split 매매내역을 분석하여 평가손익을 계산하는 도구입니다.
+
+## 🚀 빠른 시작
+
+### 1단계: Magic Split에서 CSV 파일 내보내기
+1. **Magic Split** 프로그램 실행
+2. **모든 매매내역** 화면으로 이동
+3. 매매내역 목록에서 **마우스 오른쪽 클릭**
+4. **CSV 저장** 선택하여 파일 저장
+
+### 2단계: 프로그램 실행
+1. 이 GitHub 저장소에서 ZIP 파일을 다운로드합니다.
+2. **`run_python.bat`** 파일을 더블클릭하여 실행
+   - Python과 필요한 라이브러리가 자동으로 설치됩니다
+   - 설치 후 프로그램이 자동으로 시작됩니다
+
+### 3단계: CSV 파일 분석
+1. 프로그램이 실행되면 CSV 파일을 **드래그 앤 드롭**
+2. 또는 **파일 선택** 버튼으로 Magic Split에서 저장한 CSV 파일 선택
+3. 분석 결과 확인
+
+## 📋 주요 기능
+
+- ✅ **Magic Split CSV 파일 지원**
+- ✅ **드래그 앤 드롭** 파일 업로드
+- ✅ **평가손익 자동 계산**
+- ✅ **종목별 통계** 표시
+- ✅ **CSV 파일 합치기**
+- ✅ **달러/원 구분 표시**
+
+## 🛠️ 시스템 요구사항
+
+- **Windows 10/11**
+- **Python 3.8+** (run_python.bat이 자동 확인)
+- **인터넷 연결** (최초 라이브러리 설치 시)
+
+## 📁 파일 구성
+
+```
+├── main.py               # 메인 프로그램
 ├── ui_components.py      # UI 컴포넌트
 ├── file_handler.py       # 파일 처리
-├── data_analyzer.py      # 데이터 분석
+├── data_analyzer.py      # 데이터 분석 엔진
 ├── requirements.txt      # Python 패키지 목록
+├── run_python.bat        # 실행 스크립트 (권장)
 ├── TradingHistory.csv    # 샘플 데이터
-├── run_analyzer.bat      # 메인 실행 스크립트 (권장)
-├── run_exe.bat          # 실행파일 실행
-├── run_python.bat       # Python 실행
-└── README.txt           # 이 파일
+└── README.md            # 이 파일
+```
 
-🚀 실행 방법:
+## 🔧 문제 해결
 
-방법 1: 메인 스크립트 (권장)
-  → run_analyzer.bat 더블클릭
-  → 실행 방법 선택
+**Python이 설치되지 않은 경우:**
+- [Python 공식 사이트](https://python.org)에서 Python 3.8+ 설치
 
-방법 2: 직접 실행
-  → main.exe 더블클릭 (가장 빠름)
-  → 또는 run_exe.bat 실행
+**라이브러리 설치 오류:**
+- 관리자 권한으로 `run_python.bat` 실행
+- 또는 수동 설치: `pip install -r requirements.txt`
 
-방법 3: Python으로 실행 (개발용)
-  → run_python.bat 실행
-  → 또는 명령프롬프트에서: python main.py
+**CSV 파일 인식 오류:**
+- Magic Split에서 올바른 형식으로 CSV 저장 확인
+- 파일 인코딩이 UTF-8 또는 CP949인지 확인
 
-📋 기능:
-- CSV 파일 드래그 앤 드롭
-- 주식 거래 데이터 분석
-- 평가손익 계산
-- 통계 정보 표시
-- 빠른 시작 속도 (0.1초)
+## 💡 사용 팁
 
-⚡ 성능:
-- 시작 속도: 0.1초 (최적화됨)
-- 메모리 사용량: 낮음
-- 파일 크기: 작음
-
-🔧 문제 해결:
-- Python 오류: Python 3.8+ 설치 필요
-- 라이브러리 오류: run_python.bat이 자동 설치
-- 실행파일 오류: main.exe 파일 확인
-
-📞 지원:
-- 샘플 데이터: TradingHistory.csv 사용
-- 지원 형식: CSV 파일
-- 인코딩: UTF-8, CP949 자동 감지
+- **샘플 데이터**: `TradingHistory.csv` 파일로 먼저 테스트해보세요
+- **성능**: 대용량 파일도 빠르게 처리됩니다
+- **호환성**: Magic Split의 모든 버전 CSV 형식 지원
