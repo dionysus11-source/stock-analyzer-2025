@@ -196,7 +196,7 @@ class MainUI:
             # 숫자 형식 정리 및 변환
             def safe_float(s):
                 try:
-                    return float(s.replace('+', '').replace('원', '').replace(',', ''))
+                    return float(s.replace('+', '').replace('원', '').replace('$', '').replace(',', ''))
                 except (ValueError, AttributeError):
                     return 0
             data.sort(key=lambda x: safe_float(x[0]), reverse=reverse)
