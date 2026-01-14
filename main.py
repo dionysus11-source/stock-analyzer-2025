@@ -9,6 +9,7 @@ def create_main_app():
         from ui_components import MainUI
         from file_handler import FileHandler
         from data_analyzer import DataAnalyzer
+        from _version import __version__
         
         # tkinterdnd2 호환 루트 생성 시도
         try:
@@ -25,7 +26,7 @@ def create_main_app():
         data_analyzer = DataAnalyzer()
         
         # UI 생성
-        app = MainUI(root, file_handler, data_analyzer)
+        app = MainUI(root, file_handler, data_analyzer, __version__)
         
         # 메인 루프 시작
         root.mainloop()

@@ -48,10 +48,11 @@ class ProgressDialog:
         self.dialog.destroy()
 
 class MainUI:
-    def __init__(self, root, file_handler, data_analyzer):
+    def __init__(self, root, file_handler, data_analyzer, version="N/A"):
         self.root = root
         self.file_handler = file_handler
         self.data_analyzer = data_analyzer
+        self.version = version
         self.sort_state = {}  # 정렬 상태 저장
         
         # 드래그 앤 드롭 지연 로딩
@@ -94,6 +95,9 @@ class MainUI:
         
         # 결과 표시 영역
         self.setup_result_area(main_frame)
+        
+        # 상태바 영역
+        self.setup_statusbar()
         
         # 그리드 가중치 설정
         self.setup_grid_weights(main_frame)
@@ -183,6 +187,11 @@ class MainUI:
         
         result_frame.columnconfigure(0, weight=1)
         result_frame.rowconfigure(0, weight=1)
+
+    def setup_statusbar(self):
+        """상태바 설정"""
+        version_label = ttk.Label(self.root, text=f"Version: {self.version}", relief='sunken', anchor='e')
+        version_label.grid(row=1, column=0, sticky='ew', padx=5, pady=2)
 
     def sort_column(self, col):
         """컬럼 헤더를 클릭하여 테이블 정렬"""
