@@ -114,46 +114,31 @@ def create_update_script(source_dir, temp_dir):
     source_path = os.path.normpath(source_dir)
     target_path = os.path.normpath(APP_DIR)
     main_exe_path = os.path.join(target_path, "main.exe")
+    xcopy_log_path = os.path.join(temp_dir, "xcopy_log.txt") # 로그는 계속 남겨두어 만약의 경우를 대비
 
     script_content = f"""
 @echo off
 chcp 65001
-echo.
-echo ==========================================================
-echo               Application Updater
-echo ==========================================================
-echo.
-set "XCOPY_LOG_PATH=%~dp0xcopy_log.txt"
-echo File copy log will be saved to: 
-echo %XCOPY_LOG_PATH%
-echo.
+rem File copy log will be saved to: {xcopy_log_path}
 
-echo Waiting for the main application to close...
+rem Waiting for the main application to close...
 ping -n 4 127.0.0.1 > nul
 
-echo.
-echo Copying new files...
-echo    FROM: "{source_path}"
-echo    TO:   "{target_path}"
-xcopy "{source_path}" "{target_path}" /E /Y /I /C > "%XCOPY_LOG_PATH%" 2>&1
+rem Copying new files...
+xcopy "{source_path}" "{target_path}" /E /Y /I /C > "{xcopy_log_path}" 2>&1
 
-echo.
-echo File copy command has been executed.
-echo Please check the log file for details.
-echo.
-
-echo Verifying copy...
+rem Verifying copy and restarting...
 if exist "{main_exe_path}" (
-    echo Copy successful. Restarting application...
+    rem Restart the application from its new path
     start "" "{main_exe_path}"
+    
+    rem Clean up the temporary directory (where this script is running)
+    rmdir /s /q "%~dp0"
 ) else (
-    echo ERROR: Main executable not found after copy! Check the log.
+    rem If update fails, leave the logs and pause for user to see
+    echo ERROR: Update failed. Check logs at {xcopy_log_path}
+    pause
 )
-
-echo.
-echo Update process finished. This window can be closed.
-echo.
-pause
 """
     
     with open(script_path, 'w', encoding='utf-8') as f:
