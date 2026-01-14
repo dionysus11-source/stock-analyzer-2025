@@ -1,5 +1,6 @@
 """최적화된 주식 분석기 메인 진입점"""
 import tkinter as tk
+from tkinter import messagebox
 import time
 
 def create_main_app():
@@ -80,6 +81,47 @@ def main():
         # 스플래시 스크린 표시
         show_simple_splash()
         
+        # --- 업데이트 확인 로직 시작 ---
+        hidden_root = tk.Tk()
+        hidden_root.withdraw()
+
+        try:
+            from auto_updater import check_for_updates, download_and_install_update, run_updater_and_exit
+            update_info = check_for_updates()
+            
+            if update_info:
+                release_notes = update_info.get('release_notes', '릴리즈 노트를 불러올 수 없습니다.')
+                msg = (
+                    f"새로운 버전 ({update_info['latest_version']})이 있습니다. 업데이트 하시겠습니까?\n\n"
+                    f"릴리즈 노트:\n{release_notes}"
+                )
+                
+                if messagebox.askyesno("업데이트 확인", msg, parent=hidden_root):
+                    try:
+                        script_path = download_and_install_update(update_info['download_url'])
+                        if script_path:
+                            run_updater_and_exit(script_path)
+                        else:
+                            messagebox.showerror("업데이트 실패", "업데이트 파일을 다운로드하거나 준비하는 데 실패했습니다.", parent=hidden_root)
+                    except Exception as e:
+                        messagebox.showerror("업데이트 오류", f"업데이트 중 오류가 발생했습니다: {e}", parent=hidden_root)
+        except Exception as e:
+            # Log the error and show a message to the user
+            error_msg = f"업데이트 확인 중 오류가 발생했습니다:\n\n{e}\n\n자세한 내용은 updater.log 파일을 확인하세요."
+            try:
+                # Try to use the logger from the updater module
+                from auto_updater import logging
+                logging.error("Update check failed in main.py", exc_info=True)
+            except ImportError:
+                # If updater is not even there, just print
+                print("Could not import updater to log error.")
+            
+            messagebox.showerror("업데이트 확인 오류", error_msg, parent=hidden_root)
+        
+        finally:
+            hidden_root.destroy()
+        # --- 업데이트 확인 로직 종료 ---
+
         # 메인 앱 실행
         create_main_app()
         
