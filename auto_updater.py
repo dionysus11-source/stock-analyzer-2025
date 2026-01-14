@@ -114,12 +114,20 @@ def create_update_script(source_dir, temp_dir):
     source_path = os.path.normpath(source_dir)
     target_path = os.path.normpath(APP_DIR)
     main_exe_path = os.path.join(target_path, "main.exe")
-    xcopy_log_path = os.path.join(temp_dir, "xcopy_log.txt") # 로그는 계속 남겨두어 만약의 경우를 대비
+    xcopy_log_path = os.path.join(temp_dir, "xcopy_log.txt")
 
     script_content = f"""
 @echo off
 chcp 65001
-rem File copy log will be saved to: {xcopy_log_path}
+title Application Updater
+
+echo ==========================================================
+echo.
+echo    Updating Application... Please wait.
+echo.
+echo    This window will close automatically upon completion.
+echo.
+echo ==========================================================
 
 rem Waiting for the main application to close...
 ping -n 4 127.0.0.1 > nul
@@ -135,8 +143,16 @@ if exist "{main_exe_path}" (
     rem Clean up the temporary directory (where this script is running)
     rmdir /s /q "%~dp0"
 ) else (
-    rem If update fails, leave the logs and pause for user to see
-    echo ERROR: Update failed. Check logs at {xcopy_log_path}
+    rem If update fails, show an error and pause for the user to see
+    echo.
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    echo.
+    echo    ERROR: Update failed.
+    echo.
+    echo    Please check the log file for details:
+    echo    {xcopy_log_path}
+    echo.
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     pause
 )
 """

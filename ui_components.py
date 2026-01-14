@@ -386,3 +386,41 @@ class MainUI:
         """에러 처리"""
         progress_dialog.close()
         messagebox.showerror("오류", f"파일 분석 중 오류가 발생했습니다:\n{error_msg}")
+
+class UpdateProgressDialog:
+    def __init__(self, parent, title="업데이트 중..."):
+        self.dialog = tk.Toplevel(parent)
+        self.dialog.title(title)
+        self.dialog.geometry("350x150")
+        self.dialog.resizable(False, False)
+        self.dialog.grab_set()
+        
+        # 화면 중앙에 위치
+        self.center_dialog(parent)
+        
+        self.setup_ui()
+        
+    def center_dialog(self, parent):
+        parent.update_idletasks()
+        x = parent.winfo_x() + (parent.winfo_width() // 2) - 175
+        y = parent.winfo_y() + (parent.winfo_height() // 2) - 75
+        self.dialog.geometry(f"350x150+{x}+{y}")
+        
+    def setup_ui(self):
+        frame = ttk.Frame(self.dialog, padding="20")
+        frame.pack(expand=True, fill='both')
+        
+        self.status_label = ttk.Label(frame, text="업데이트를 준비하고 있습니다...\n잠시만 기다려 주세요.", justify=tk.CENTER)
+        self.status_label.pack(pady=(10, 15))
+        
+        self.progress = ttk.Progressbar(frame, length=300, mode='indeterminate')
+        self.progress.pack()
+        self.progress.start(10)
+        
+    def update_text(self, text):
+        self.status_label.config(text=text)
+        self.dialog.update()
+        
+    def close(self):
+        self.progress.stop()
+        self.dialog.destroy()

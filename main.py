@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import time
+import threading
 
 def create_main_app():
     """메인 애플리케이션 생성 (지연 로딩)"""
@@ -87,6 +88,8 @@ def main():
 
         try:
             from auto_updater import check_for_updates, download_and_install_update, run_updater_and_exit
+            from ui_components import UpdateProgressDialog
+
             update_info = check_for_updates()
             
             if update_info:
@@ -97,14 +100,43 @@ def main():
                 )
                 
                 if messagebox.askyesno("업데이트 확인", msg, parent=hidden_root):
-                    try:
-                        script_path = download_and_install_update(update_info['download_url'])
-                        if script_path:
-                            run_updater_and_exit(script_path)
-                        else:
-                            messagebox.showerror("업데이트 실패", "업데이트 파일을 다운로드하거나 준비하는 데 실패했습니다.", parent=hidden_root)
-                    except Exception as e:
-                        messagebox.showerror("업데이트 오류", f"업데이트 중 오류가 발생했습니다: {e}", parent=hidden_root)
+                    progress_dialog = UpdateProgressDialog(hidden_root)
+                    
+                    def run_update_in_background():
+                        """백그라운드에서 업데이트 다운로드 및 준비, UI 업데이트는 메인 스레드에서 예약"""
+                        try:
+                            # 이 함수는 백그라운드 스레드에서 실행되므로 직접 UI를 업데이트하지 않음
+                            # progress_dialog.update_text("업데이트 파일을 다운로드 중입니다...") -> 직접 호출 대신 예약 필요
+                            
+                            script_path = download_and_install_update(update_info['download_url'])
+                            
+                            if script_path:
+                                # 사용자가 메시지를 볼 수 있도록 잠시 대기
+                                time.sleep(1) 
+                                # 메인 스레드에서 프로그램 종료 및 업데이터 실행 예약
+                                hidden_root.after(0, run_updater_and_exit, script_path)
+                            else:
+                                # 에러 메시지 표시 및 다이얼로그 닫기를 메인 스레드에서 예약
+                                def show_error_and_close():
+                                    progress_dialog.close()
+                                    messagebox.showerror("업데이트 실패", "업데이트 파일을 다운로드하거나 준비하는 데 실패했습니다.", parent=hidden_root)
+                                hidden_root.after(0, show_error_and_close)
+                                
+                        except Exception as e:
+                            # 예외 발생 시 에러 메시지 표시 및 다이얼로그 닫기를 메인 스레드에서 예약
+                            def show_exception_and_close(err):
+                                progress_dialog.close()
+                                messagebox.showerror("업데이트 오류", f"업데이트 중 오류가 발생했습니다: {err}", parent=hidden_root)
+                            hidden_root.after(0, show_exception_and_close, e)
+
+                    # 백그라운드에서 업데이트 실행
+                    update_thread = threading.Thread(target=run_update_in_background, daemon=True)
+                    update_thread.start()
+                    
+                    # 업데이트 다이얼로그가 떠있는 동안 hidden_root의 메인 루프를 실행
+                    hidden_root.mainloop()
+                    return # 업데이트가 시작되면 메인 앱을 실행하지 않고 종료
+
         except Exception as e:
             # Log the error and show a message to the user
             error_msg = f"업데이트 확인 중 오류가 발생했습니다:\n\n{e}\n\n자세한 내용은 updater.log 파일을 확인하세요."
