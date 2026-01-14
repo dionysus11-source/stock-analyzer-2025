@@ -16,8 +16,6 @@ https://github.com/dionysus11-source/stock-analyzer-2025/releases
 
 
 2. **`main.exe`** 파일을 더블클릭하여 실행
-   - Python과 필요한 라이브러리가 자동으로 설치됩니다
-   - 설치 후 프로그램이 자동으로 시작됩니다
 
 ### 3단계: CSV 파일 분석
 1. 프로그램이 실행되면 CSV 파일을 **드래그 앤 드롭**
